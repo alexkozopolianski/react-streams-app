@@ -17,3 +17,5 @@ API-сервер использует пакет  [JSON-Server](https://github.c
 RTMP-сервер использует [Node-Media-Server](https://github.com/illuspas/Node-Media-Server)
 
 ![Пример](https://github.com/alexkozopolianski/react-streams-app/blob/master/client/public/stream.png)
+
+![Пример](https://github.com/alexkozopolianski/react-streams-app/blob/master/client/public/streams.png)
