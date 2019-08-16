@@ -1,16 +1,19 @@
-# Simple Streaming App
-To run it, after cloning this Repo, run the following command on the 3 subfolder:
+# Стриминговое приложение 
+
+Чтобы запустить,после клонирования этого репозитория, выполните следующую команду в подпапке api и client:
 
 > npm run start
 
-You'll then have the API running, from where the client React App wil fetch all the streams.
-On the client side, you have to be logged in to create a stream, and you will get some admin buttons do edit and delete your streams.
-You can then stream with OBS for example to:
+После этого у вас будет запущен API, откуда клиентское приложение React извлечет все потоки.
+На стороне клиента вы должны войти в систему, чтобы создать поток, и вы получите несколько кнопок администратора, которые позволяют редактировать и удалять ваши потоки.
+Затем вы можете передавать с OBS, например:
+
 > rtmp://localhost/live
-The stream key will be the ID of the stream.
-The client app will then try to get the stream with the corresponding ID from the RTMP server.
-Ideally when you create a stream, you would get a unique key to use as a stream key. And then the StreamView component would use the corresponding stream key to get each stream from the RTMP server.
-API Server is using JSON-Server Package
-RTMP Server is using Node-Media-Server
-Client React App was built from Scratch.
-![alt text](https://avatars2.githubusercontent.com/u/11632545?v=3&s=200)
+
+Ключ потока будет идентификатором потока.
+Затем клиентское приложение попытается получить поток с соответствующим идентификатором с RTMP-сервера.
+В идеале, когда вы создаете поток, вы получите уникальный ключ для использования в качестве ключа потока. И тогда компонент StreamView будет использовать соответствующий ключ потока для получения каждого потока с сервера RTMP.
+API-сервер использует пакет  [JSON-Server](https://github.com/typicode/json-server)
+RTMP-сервер использует [Node-Media-Server](https://github.com/illuspas/Node-Media-Server)
+
+![alt text]()
