@@ -1,18 +1,45 @@
-import React from 'react';
-import flv from 'flv.js';
-import { connect } from 'react-redux';
-import { fetchStream } from '../../actions';
+import React from "react";
+import flv from "flv.js";
+import { connect } from "react-redux";
+import firebase from "../../config";
+import * as actions from "../../store/actions/index";
+import {
+  Grid,
+  Form,
+  Segment,
+  Button,
+  Embed,
+  Header,
+  Image,
+  Message,
+  Comment,
+  Icon,
+} from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 class StreamShow extends React.Component {
   constructor(props) {
     super(props);
     this.videoRef = React.createRef();
   }
+  state = {
+    currentChannel: this.props.currentChannel,
+    isChannelFollow: false,
+    id: this.props.chat.id,
+    channelName: this.props.chat.name,
+    author: this.props.chat.createdBy.name,
+    avatar: this.props.chat.createdBy.avatar,
+    user: this.props.currentUser,
+    usersRef: firebase.database().ref("users"),
+  };
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.fetchStream(id);
+    const { id, user } = this.state;
+    this.props.fetchChannel();
     this.buildPlayer();
+    if (user && id) {
+      this.addUserStarsListener(id, user.uid);
+    }
   }
 
   componentDidUpdate() {
@@ -24,39 +51,103 @@ class StreamShow extends React.Component {
   }
 
   buildPlayer() {
-    if (this.player || !this.props.stream) {
-      return;
-    }
-    const { id } = this.props.match.params;
+    const id = this.state.id;
     this.player = flv.createPlayer({
-      type: 'flv',
+      type: "flv",
       url: `http://localhost:8000/live/${id}.flv`,
     });
     this.player.attachMediaElement(this.videoRef.current);
     this.player.load();
   }
 
-  render() {
-    if (!this.props.stream) {
-      return <div>Loading...</div>;
-    }
+  addUserStarsListener = (channelId, userId) => {
+    this.state.usersRef
+      .child(userId)
+      .child("starred")
+      .once("value")
+      .then((data) => {
+        if (data.val() !== null) {
+          const channelIds = Object.keys(data.val());
+          const prevStarred = channelIds.includes(channelId);
+          this.setState({ isChannelFollow: prevStarred });
+        }
+      });
+  };
 
-    const { title, description } = this.props.stream;
+  handleStar = () => {
+    this.setState(
+      (prevState) => ({
+        isChannelFollow: !prevState.isChannelFollow,
+      }),
+      () => this.starChannel()
+    );
+  };
+
+  starChannel = () => {
+    if (this.state.isChannelFollow) {
+      this.props.starChannel(this.props.currentUser, this.props.currentChannel);
+    } else {
+      this.state.usersRef
+        .child(`${this.state.user.uid}/starred`)
+        .child(this.state.id)
+        .remove((err) => {
+          if (err !== null) {
+            console.error(err);
+          }
+        });
+    }
+  };
+
+  render() {
+    const { channelName, author, avatar, isChannelFollow } = this.state;
     return (
       <div>
-        <video ref={this.videoRef} style={{ width: '100%' }} controls />
-        <h1 style={{ color: "white" }}>{title}</h1>
-        <h5 style={{ color: "white" }}>{description}</h5>
+        <Link to="/">
+          <Button
+            style={{ marginBottom: 20 }}
+            color="violet"
+            content="Back"
+            icon="arrow left"
+          />
+        </Link>
+
+        <video ref={this.videoRef} style={{ width: "100%" }} controls />
+        <Grid style={{ marginTop: 20 }}>
+          <Grid.Row>
+            <Grid.Column width={10}>
+              <Comment.Group size="massive">
+                <Comment>
+                  <Comment.Avatar as="a" src={avatar} />
+                  <Comment.Content>
+                    <Comment.Author as="a" style={{ color: "black" }}>
+                      {author}
+                    </Comment.Author>
+                    <Comment.Text style={{ color: "black" }}>
+                      {channelName}{" "}
+                    </Comment.Text>
+                  </Comment.Content>
+                </Comment>
+              </Comment.Group>
+            </Grid.Column>
+            <Grid.Column width={6}>
+              <Button
+                style={{ right: "0" }}
+                onClick={this.handleStar}
+                color={isChannelFollow ? "grey" : "violet"}
+                content="Follow"
+                icon="heart"
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ streams }, ownProps) => {
-  return { stream: streams[ownProps.match.params.id] };
+const mapDispatchToProps = {
+  fetchChannel: actions.fetchChannel,
+  starChannel: actions.starChannel,
 };
 
-export default connect(
-  mapStateToProps,
-  { fetchStream }
-)(StreamShow);
+export default connect(null, mapDispatchToProps)(StreamShow);

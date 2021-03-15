@@ -1,37 +1,32 @@
-import React from 'react';
-import './App.css';
-import { Router,  Route, Switch } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import { connect } from "react-redux";
+import { Grid } from "semantic-ui-react";
 
-import StreamCreate from './components/streams/StreamCreate';
-import StreamDelete from './components/streams/StreamDelete';
-import StreamEdit from './components/streams/StreamEdit';
-import StreamList from './components/streams/StreamList';
-import StreamShow from './components/streams/StreamShow';
-import history from './history';
+import Sidepanel from "./components/SidePanel/SidePanel";
+import Channels from "./components/Channels/Channels";
+import Main from "./components/Channels/Main";
 
-import Header from './components/Header';
-
-
-
-const  App = () => {
+const App = ({ currentUser }) => {
   return (
-   <div className="app">
-    <div className="ui container" >
-    <Router history={history}>
-      <div>
-        <Header />
-        <Switch>
-        <Route path="/" exact component={StreamList} />
-        <Route path="/streams/new" exact component={StreamCreate} />
-        <Route path="/streams/edit/:id" exact component={StreamEdit} />
-        <Route path="/streams/delete/:id" exact component={StreamDelete} />
-         <Route path="/streams/:id" exact component={StreamShow} />
-        </Switch>
-      </div>
-    </Router>
-    </div>
-    </div>
+    <Grid columns="equal" className="app">
+      <Sidepanel
+        key={currentUser && currentUser.uid}
+        currentUser={currentUser}
+      />
+      <Grid.Column className="center-content">
+        <Main currentUser={currentUser} />
+        <Channels currentUser={currentUser} />
+      </Grid.Column>
+    </Grid>
   );
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  currentUser: state.auth.currentUser,
+  currentChannel: state.chat.currentChannel,
+  isPrivateChannel: state.chat.isPrivateChannel,
+  userPosts: state.chat.userPosts,
+});
+
+export default connect(mapStateToProps)(App);
