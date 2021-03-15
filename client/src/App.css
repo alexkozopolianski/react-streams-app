@@ -1,40 +1,127 @@
-.App {
+html,
+body,
+.app {
+  height: 100vh;
+  background: #ffff;
+  padding: 1em;
+}
+
+/* SidePanel.js */
+.menu {
+  padding-bottom: 2em;
+}
+
+/* Messages.js */
+
+.messages {
+  height: 70vh;
+  overflow-y: scroll;
+}
+
+/* MessageForm */
+
+.message__form {
+  position: relative;
+  bottom: 0;
+}
+
+.emojipicker {
+  position: absolute;
+}
+
+.message__progress {
+  height: 58vh;
+  overflow-y: scroll;
+}
+
+.message__image {
+  padding: 1em;
+}
+
+.progress__bar {
+  margin: 0.3em 0 0 0 !important;
+}
+
+/*Skeleton.js*/
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.skeleton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  animation: sweep 2s infinite;
+  background-image: linear-gradient(
+    to left,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(150%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.skeleton__avatar {
+  height: 35px;
+  width: 35px;
+  border-radius: 3px;
+  background-color: rgba(58, 57, 57, 0.3);
+}
+
+.skeleton__author {
+  background-color: rgba(58, 57, 57, 0.3);
+  width: 120px;
+  height: 10px;
+  border-radius: 3px;
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
+  right: 0;
+}
+
+.skeleton__details {
+  background-color: rgba(58, 57, 57, 0.3);
+  height: 20px;
+  border-radius: 3px;
+  position: absolute;
+  bottom: 5px;
+  left: 40px;
+  right: 20px;
+}
+
+.stream {
+  margin-top: 50px;
+}
+
+.popular {
+  margin-left: 200px;
+}
+
+.popular-body {
+  height: 400px;
+  width: 700px;
+}
+
+.center-content {
+  margin-left: 520px;
   text-align: center;
+  margin-right: auto;
 }
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-label {
-  color: #f4f0f5;
-}
-
-
-
